@@ -173,6 +173,8 @@ def JSONObject(state, encoding, strict, scan_once, object_hook,
     while True:
         key, end = scanstring(s, end, encoding, strict)
         key = memo_get(key, key)
+        
+        on_item_parsed(key)
 
         # To skip some function call overhead we optimize the fast paths where
         # the JSON key separator is ": " or just ":".
@@ -192,6 +194,9 @@ def JSONObject(state, encoding, strict, scan_once, object_hook,
             pass
 
         value, end = scan_once(s, end)
+        
+        on_item_parsed(key, value)
+        
         pairs.append((key, value))
 
         try:
